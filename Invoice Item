@@ -1,0 +1,46 @@
+package assignment13;
+public class InvoiceItem 
+{
+	private String descrption;
+	private int price,quantity;
+	public InvoiceItem()
+	{
+		descrption="none";
+		price=0;
+		quantity=0;
+	}
+	public InvoiceItem(String d,int p,int q)
+	{
+		descrption=d;
+		price=p;
+		quantity=q;
+	}
+	public void setDescription(String d)
+	{
+		descrption=d;
+	}
+	public void setQuantity(int q)
+	{
+		quantity=q;
+	}
+	public void setPrice(int p)
+	{
+		price=p;
+	}
+	public int getQuantity()
+	{
+		return quantity;
+	}
+	public String getDescription()
+	{
+		return descrption;
+	}
+	public int getPrice()
+	{
+		return price;
+	}
+	public int getItemTotal()
+	{
+		return quantity * price;
+	}
+}//end class
