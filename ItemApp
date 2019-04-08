@@ -1,0 +1,143 @@
+//YiMing Yao
+//CIS 254 Assignment13 
+//This problem will simulate the order list
+package assignment13;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Set;
+public class ItemApp 
+{
+	static Scanner input=new Scanner(System.in);
+	public static void addItems(ArrayList<InvoiceItem>order)
+	{
+		//declare variable
+		String[]items= {"Nike","Adidas","Jordan","Forever21","H&M"};
+		int [] price= {50,45,65,15,10};
+		int choice,quantity=0;
+		int find=0;
+		showProducts(items, price);//use this method to show products
+		while(true)
+		{
+			System.out.print("Enter item to buy or 0 to quit: ");
+			choice=Integer.parseInt(input.nextLine());
+			while(choice>items.length)//validate data
+			{
+				System.out.print("Invalid, re-enter: ");
+				choice=Integer.parseInt(input.nextLine());
+			}
+			if(choice==0)//quit
+			{
+				printCart(order);
+				break;
+			}
+			System.out.printf("Ordering %s,price is %d%n",items[choice-1],price[choice-1]);
+			System.out.print("How many? ");
+			quantity=Integer.parseInt(input.nextLine());
+			while(quantity<=0)//validate data
+			{
+				System.out.println("Invalid, re-enter: ");
+				quantity=Integer.parseInt(input.nextLine());
+			}
+			find=-1;//if you choose same item twice, put them together
+			for(int i=0;i<order.size();i++)//check
+			{
+				if(items[choice-1].equals(order.get(i).getDescription()))
+				{
+					find=i;
+				}
+			}
+			if(find>=0)
+			{
+			quantity=quantity+order.get(find).getQuantity();
+			order.get(find).setQuantity(quantity);
+			}
+			else
+			{
+				order.add(new InvoiceItem(items[choice-1],price[choice-1],quantity));//set
+			}
+		}//end loop
+	}//end method
+	public static void printCart(ArrayList<InvoiceItem> order)
+	{
+		System.out.println("Your cart");
+		System.out.println("Item   Description   Qty    Price");
+		for(int index=0;index<order.size();index++)
+		{
+			System.out.printf("%d%10s%12d%10d%n",index+1,order.get(index).getDescription(),order.get(index).getQuantity(),order.get(index).getPrice());
+		}
+	}//end method
+	public static void checkout(ArrayList<InvoiceItem>order)//summary
+	{
+		int total=0;
+		System.out.println("INVOICE");
+		System.out.println("Qty    Description     Each      Total");
+		for(int index=0;index<order.size();index++)
+		{
+		System.out.printf("%d%10s%15d%10d%n",order.get(index).getQuantity(),order.get(index).getDescription(),order.get(index).getPrice(),order.get(index).getItemTotal());
+		total+=total+order.get(index).getItemTotal();
+		}
+		System.out.println("Total Due: "+ total);
+		System.out.println("Thank you for your order");
+	}//end method 
+	public static void showProducts(String[]items,int[] price)
+	{
+		for(int i=0;i<5;i++)
+		{
+			System.out.printf("%d     %-10s%10d%n",i+1,items[i],price[i]);
+		}
+	}//end method
+	public static void editCart(ArrayList<InvoiceItem>order)//edit method
+	{
+		int change,quantity;
+		System.out.print("Select item to remove or change, or 0 if no change: ");
+		change=Integer.parseInt(input.nextLine());
+		while(change>order.size())
+		{
+			System.out.print("Invalid, re-enter");
+			change=Integer.parseInt(input.nextLine());
+		}
+		while(change>0)
+		{
+			change--;
+			System.out.print("Enter new quantity or 0 to remove: ");
+			quantity=Integer.parseInt(input.nextLine());
+			if(quantity>0)
+			{
+				quantity=quantity+order.get(change).getQuantity();
+				order.get(change).setQuantity(quantity);//set
+			}
+			else
+			{
+				order.remove(change);
+			}
+			//end while
+			System.out.print("Select item to remove or change, or 0 if no change: ");
+			change=Integer.parseInt(input.nextLine());
+			while(change>order.size())
+			{
+				System.out.print("Invalid, re-enter");
+				change=Integer.parseInt(input.nextLine());
+			}
+		}//end loop
+		checkout(order);	
+	}//end method
+	public static void main(String[] args) 
+	{
+		String again="";
+		ArrayList<InvoiceItem>order=new ArrayList<InvoiceItem>();//declare arraylist
+		do 
+		{
+			System.out.println("PRODUCT LIST");
+			System.out.println("Item  Description   Price");
+			addItems(order);//call the method
+			editCart(order);//call the method
+			System.out.print("Another order: ");
+			again=input.nextLine();
+			order.clear();//remove all the data 
+		} while (again.equals("y"));//end loop
+		if(again.equals("n"))
+		{
+			System.out.println("good bye");
+		}//end if
+	}//end main
+}//end class
